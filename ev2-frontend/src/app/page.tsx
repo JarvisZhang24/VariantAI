@@ -61,7 +61,7 @@ export default function HomePage() {
         setChromosomes(data.chromosomes);
         console.log(data.chromosomes);
         if (data.chromosomes.length > 0){
-          setSelectedChromosome(data.chromosomes[0].name);
+          setSelectedChromosome(data.chromosomes[0]!.name);
           
         }
       } catch (error) {
