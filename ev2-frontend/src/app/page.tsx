@@ -6,7 +6,9 @@ import {
   type GenomeAssemblyFromSearch,
   type ChromosomeFromSearch,
   getAvailableGenomes,
-  getGenomeChromosomes 
+  getGenomeChromosomes, 
+  type GeneFromSearch,
+  searchGenes
 
 } from "../utils/genome-api";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Value } from "@radix-ui/react-select";
@@ -26,6 +28,7 @@ export default function HomePage() {
   const [chromosomes , setChromosomes] = useState<ChromosomeFromSearch[]>([]);
   const [selectedChromosome , setSelectedChromosome] = useState<string>("chr1");
   const [searchQuery , setSearchQuery] = useState<string>("");
+  const [searchResults , setSearchResults] = useState<GeneFromSearch[]>([]);
 
   const [isLoading , setIsLoading] = useState(false);
 
@@ -73,6 +76,29 @@ export default function HomePage() {
     fetchChromosomes();
   }, [selectedGenome])
 
+  const performGeneSearch = async (query: string, genome: string,filterFn?:((gene:GeneFromSearch)=>boolean),) => {
+    try {
+        setIsLoading(true);
+        const data = await searchGenes(query, genome);
+        const results = filterFn? data.results.filter(filterFn):data.results;
+        
+        console.log(results);
+        
+        setSearchResults(results);
+    } catch (error) {
+      setError("Failed to search Genes");
+    } finally {
+      setIsLoading(false);
+    }
+    
+  }
+
+  useEffect(() => {
+    if(!selectedChromosome || mode !== "browse") return;
+    performGeneSearch(selectedChromosome, selectedGenome , (gene:GeneFromSearch) => gene.chrom === selectedChromosome);
+
+  }, [selectedChromosome , selectedGenome, mode]);
+
   const handleGenomeChange = (value: string) => {
     setSelectedGenome(value);
   }
@@ -84,6 +110,11 @@ export default function HomePage() {
   const switchMode = (newMode: Mode) => {
     if (newMode === mode) {
       return;
+    }
+    setSearchResults([]);
+    setError(null);
+    if(newMode === "browse" && selectedChromosome){
+      performGeneSearch(selectedChromosome, selectedGenome , (gene:GeneFromSearch) => gene.chrom === selectedChromosome);
     }
     setMode(newMode);
   }
@@ -100,14 +131,7 @@ export default function HomePage() {
     if (e) e.preventDefault();
     if (!searchQuery.trim()) return;
 
-    setIsLoading(true);
-    try {
-      
-    } catch (error) {
-      setError("Failed to search");
-    } finally {
-      setIsLoading(false);
-    }    
+    performGeneSearch(searchQuery, selectedGenome);   
     
   };
   

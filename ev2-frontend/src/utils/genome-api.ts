@@ -106,30 +106,47 @@ export async function getGenomeChromosomes(genomeId: string) {
 
 }
 
-export async function searchGenes(query: string , genome: string) {
-    const url = "https://clinicaltables.nlm.nih.gov/api/ncbi_genes/v3/search"
-    const params = new URLSearchParams({
+export async function searchGenes(query: string, genome: string) {
+  const url = "https://clinicaltables.nlm.nih.gov/api/ncbi_genes/v3/search";
+  const params = new URLSearchParams({
     terms: query,
     df: "chromosome,Symbol,description,map_location,type_of_gene",
     ef: "chromosome,Symbol,description,map_location,type_of_gene,GenomicInfo,GeneID",
-    })    
-    
-    const response = await fetch(`${url}?${params}`);
-    if(!response.ok){
-        throw new Error("Failed to fetch Genes from NLM API");
-    }
+  });
+  const response = await fetch(`${url}?${params}`);
+  if (!response.ok) {
+    throw new Error("NCBI API Error");
+  }
 
-    const data = await response.json();
-    if (!data.genes) {
-        throw new Error("Missing Genes Data");
-    }
-    const result:GeneFromSearch[] = [];
-    if (data[0]>0){
-        
-    }
+  const data = await response.json();
+  const results: GeneFromSearch[] = [];
 
-    
-    
+  if (data[0] > 0) {
+    const fieldMap = data[2];
+    const geneIds = fieldMap.GeneID || [];
+    for (let i = 0; i < Math.min(10, data[0]); ++i) {
+      if (i < data[3].length) {
+        try {
+          const display = data[3][i];
+          let chrom = display[0];
+          if (chrom && !chrom.startsWith("chr")) {
+            chrom = `chr${chrom}`;
+          }
+          results.push({
+            symbol: display[2],
+            name: display[3],
+            chrom,
+            description: display[3],
+            gene_id: geneIds[i] || "",
+          });
+        } catch {
+          continue;
+        }
+      }
+    }
+  }
+
+  return { query, genome, results };
 }
     
 
