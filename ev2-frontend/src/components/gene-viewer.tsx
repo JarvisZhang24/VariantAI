@@ -51,11 +51,7 @@ export default function GeneViewer({
 
             if(error){
                 setError(error);
-            }
-
-            
-            
-            
+            }   
             
         } catch (error) {
             setError("Failed to fetch gene sequence, please try again later");

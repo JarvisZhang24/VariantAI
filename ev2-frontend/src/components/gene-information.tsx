@@ -34,7 +34,7 @@ export default function GeneInformation({
                 <div className="grid gap-6 md:grid-cols-2">
                     {/* 左列：基因基本信息 */}
                     <div className="space-y-3">
-                        <h3 className="mb-3 text-sm font-semibold text-[#3c4f3d]">
+                        <h3 className="mb-3 text-base font-semibold text-[#3c4f3d]">
                             Basic Information
                         </h3>
 
@@ -72,7 +72,7 @@ export default function GeneInformation({
 
                     {/* 右列：外部链接和生物体信息 */}
                     <div className="space-y-3">
-                        <h3 className="mb-3 text-sm font-semibold text-[#3c4f3d]">
+                        <h3 className="mb-3 text-base font-semibold text-[#3c4f3d]">
                             References
                         </h3>
 
@@ -121,10 +121,10 @@ export default function GeneInformation({
                 {/* Summary 区域 - 全宽 */}
                 {geneDetail?.summary && (
                     <div className="border-t border-gray-100 pt-4">
-                        <h3 className="mb-2 text-sm font-semibold text-[#3c4f3d]">
+                        <h3 className="mb-2 text-base font-semibold text-[#3c4f3d]">
                             Summary
                         </h3>
-                        <p className="text-sm leading-relaxed text-[#3c4f3d]/80">
+                        <p className="text-base leading-relaxed text-[#3c4f3d]/80">
                             {geneDetail.summary}
                         </p>
                     </div>
@@ -148,10 +148,10 @@ function InfoRow({
 }) {
     return (
         <div className="flex items-start gap-3">
-            <span className="min-w-[100px] text-xs font-medium text-[#3c4f3d]/70">
+            <span className="min-w-[100px] text-base font-medium text-[#3c4f3d]/70">
                 {label}:
             </span>
-            <span className={`flex-1 text-sm ${
+            <span className={`flex-1 text-base ${
                 highlight 
                     ? "font-semibold text-[#3c4f3d]" 
                     : "text-[#3c4f3d]/90"
