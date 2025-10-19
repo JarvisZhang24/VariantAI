@@ -151,7 +151,7 @@ export default function HomePage() {
                   <h1 className="text-2xl font-bold text-[#3c4f3d]">Variant Analysis</h1>
                   <p className="text-sm text-[#3c4f3d]/60"> Genetic variant analysis using Ev2 Model </p>
                 </div>
-                <span className="text-sm text-[#3c4f3d]/60">jarviszhang.ai@gmail.com </span>
+                <span className="text-sm text-[#3c4f3d]/60">Jarvis Zhang's Biomedical Project </span>
               </div>
               
             </div>

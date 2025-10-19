@@ -26,8 +26,8 @@ export interface GeneDetailsFromSearch {
     }[];
     summary?: string;
     organism?: {
-      scientificName: string;
-      commonName: string;
+      scientificname: string;
+      commonname: string;
     }
     
 }
