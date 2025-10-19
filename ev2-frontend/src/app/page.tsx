@@ -17,6 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
+import GeneViewer from "~/components/gene-viewer";
 
 
 type Mode = "browse" | "search";
@@ -30,7 +31,7 @@ export default function HomePage() {
   const [selectedChromosome , setSelectedChromosome] = useState<string>("chr1");
   const [searchQuery , setSearchQuery] = useState<string>("");
   const [searchResults , setSearchResults] = useState<GeneFromSearch[]>([]);
-    const [selectedGene, setSelectedGene] = useState<GeneFromSearch | null>(null);
+  const [selectedGene, setSelectedGene] = useState<GeneFromSearch | null>(null);
 
   const [isLoading , setIsLoading] = useState(false);
 
@@ -103,17 +104,21 @@ export default function HomePage() {
 
   const handleGenomeChange = (value: string) => {
     setSelectedGenome(value);
+    setSearchResults([]);
+    
+    setSelectedGene(null);
   }
 
-  const handleChromosomeChange = (value: string) => {
-    setSelectedChromosome(value);
-  }
+  
+
+  
 
   const switchMode = (newMode: Mode) => {
     if (newMode === mode) {
       return;
     }
     setSearchResults([]);
+    setSelectedGene(null);
     setError(null);
     if(newMode === "browse" && selectedChromosome){
       performGeneSearch(selectedChromosome, selectedGenome , (gene:GeneFromSearch) => gene.chrom === selectedChromosome);
@@ -125,7 +130,7 @@ export default function HomePage() {
     setMode("search");
     setSearchQuery("BRCA1");
     // handle search
-    handleSearch();
+    performGeneSearch("BRCA1", selectedGenome);
     
   }
 
@@ -157,6 +162,11 @@ export default function HomePage() {
         </header>
 
         <main className="container mx-auto px-6 py-6">  
+          {selectedGene ? (
+            <GeneViewer gene={selectedGene} genomeId={selectedGenome} onClose={() => setSelectedGene(null)} />
+          ) : (
+            <>
+        
         <Card className="mb-6 gap-0 border-none bg-white py-0 shadow-sm">
               <CardHeader className="pt-4 pb-2">
                 <div className="flex items-center justify-between">
@@ -329,7 +339,7 @@ export default function HomePage() {
                         <TableBody>
                           {searchResults.map((gene, index) => (
                             <TableRow
-                              key={`${gene.symbol}-${index}`}
+                              key={`${gene.symbol}-${index}` }
                               className="cursor-pointer border-b border-[#3c4f3d]/5 hover:bg-[#e9eeea]/50"
                               onClick={() => setSelectedGene(gene)}
                             >
@@ -362,6 +372,8 @@ export default function HomePage() {
                     </p>
                   </div>
                 )}
+
+                
                   
 
                     
@@ -371,6 +383,9 @@ export default function HomePage() {
 
               
             </Card>
+
+            </>
+          )}
           
         </main>
       
